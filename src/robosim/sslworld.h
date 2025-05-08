@@ -38,6 +38,8 @@ private:
     double timeStep;
     int stateSize;
     std::vector<double> state;
+    SSLConfig::Robot robotConfig;  // Novo membro
+
 
 public:
     bool fullSpeed = false;
@@ -47,10 +49,13 @@ public:
     PFixedBox *walls[SSL_WALL_COUNT]{};
     SSLRobot *robots[SSL_MAX_ROBOT_COUNT * 2]{};
     SSLConfig::Field field = SSLConfig::Field();
+    SSLConfig::Robot& getRobotConfig() { return robotConfig; }  // Novo método
 
     SSLWorld(int fieldType, int nRobotsBlue, int nRobotsYellow, double timeStep,
              std::vector<double> ballPos, std::vector<std::vector<double>> blueRobotsPos, std::vector<std::vector<double>> yellowRobotsPos);
     ~SSLWorld();
+
+
     void step(std::vector<std::vector<double>> actions);
     void replace(std::vector<double> ballPos, std::vector<std::vector<double>> blueRobotsPos, std::vector<std::vector<double>> yellowRobotsPos);
     void initWalls();

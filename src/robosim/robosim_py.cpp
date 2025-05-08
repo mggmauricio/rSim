@@ -49,6 +49,22 @@ struct SSL {
 
     ~SSL() { delete m_world; }
 
+
+    void setRobotType(int type) const { m_world->getRobotConfig().setRobotType(type); }
+
+    void setRobotParams(const std::unordered_map<std::string, double>& params) const {
+        auto& config = m_world->getRobotConfig();
+        for (const auto& [key, value] : params) {
+            if (key == "wheel0_angle") config.setWheel0Angle(static_cast<int>(value));
+            else if (key == "wheel1_angle") config.setWheel1Angle(static_cast<int>(value));
+            else if (key == "wheel2_angle") config.setWheel2Angle(static_cast<int>(value));
+            else if (key == "wheel3_angle") config.setWheel3Angle(static_cast<int>(value));
+            else if (key == "radius") config.setRadius(value);
+            else if (key == "wheel_radius") config.setWheelRadius(value);
+            else if (key == "wheel_motor_max_rpm") config.setWheelMotorMaxRPM(value);
+        }
+    }
+    
     void step(vvd actions) const { m_world->step(std::move(actions)); }
 
     vd getState() const { return m_world->getState(); }
@@ -74,12 +90,14 @@ PYBIND11_MODULE(_robosim, m) {
             .def("reset", &VSS::reset)
             .def("get_field_params", &VSS::getFieldParams);
 
-    py::class_<SSL>(m, "SSL")
+   py::class_<SSL>(m, "SSL")
             .def(py::init<int, int, int, int, vd, vvd, vvd>())
             .def("step", &SSL::step)
             .def("get_state", &SSL::getState)
             .def("reset", &SSL::reset)
-            .def("get_field_params", &SSL::getFieldParams);
+            .def("get_field_params", &SSL::getFieldParams)
+            .def("set_robot_type", &SSL::setRobotType)
+            .def("set_robot_params", &SSL::setRobotParams);
 }
 
 

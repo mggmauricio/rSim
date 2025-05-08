@@ -107,7 +107,21 @@ namespace SSLConfig
                 setFieldPenaltyPoint(6.00);
                 setGoalWidth(0.70);
                 break;
-            default:
+
+            // No método setFieldType da classe Field, antes do default:
+        case 3: // EL
+            setRobotsCount(6);
+            setRobotsBlueCount(3);
+            setRobotsYellowCount(3);
+            setFieldLength(4.50);
+            setFieldWidth(3.00);
+            setFieldPenaltyWidth(1.35);
+            setFieldPenaltyDepth(0.5);
+            setFieldPenaltyPoint(1.50);
+            setGoalWidth(0.70);
+            setGoalDepth(0.20);
+            break;
+        default:
                 break;
             }
         }
@@ -140,9 +154,17 @@ namespace SSLConfig
         double getBallAngularDamp() { return this->ballAngularDamp; }
     };
 
+
+    enum RobotType {
+        DEFAULT_ROBOT,
+        EL_ROBOT
+    };
+
+
     class Robot
     {
     private:
+        int robotType = DEFAULT_ROBOT;
         int wheel0Angle = 60;
         int wheel1Angle = 135;
         int wheel2Angle = 225;
@@ -199,9 +221,42 @@ namespace SSLConfig
         double getWheelPerpendicularFriction() { return this->wheelPerpendicularFriction; }
         double getWheelMotorMaxTorque() { return this->wheelMotorMaxTorque; }
         double getWheelMotorMaxRPM() { return this->wheelMotorMaxRPM; }
+          // Adicionar no final dos métodos públicos
+        int getRobotType() { return this->robotType; }
+        void setWheel0Angle(int value) { this->wheel0Angle = value; }
+        void setWheel1Angle(int value) { this->wheel1Angle = value; }
+        void setWheel2Angle(int value) { this->wheel2Angle = value; }
+        void setWheel3Angle(int value) { this->wheel3Angle = value; }
+        void setRadius(double value) { this->radius = value; }
+        void setWheelRadius(double value) { this->wheelRadius = value; }
+        void setWheelMotorMaxRPM(double value) { this->wheelMotorMaxRPM = value; }
+        
+        void setRobotType(int value) {
+            this->robotType = value;
+            switch (this->robotType) {
+            case DEFAULT_ROBOT:
+                wheel0Angle = 60;
+                wheel1Angle = 135;
+                wheel2Angle = 225;
+                wheel3Angle = 300;
+                radius = 0.090;
+                wheelMotorMaxRPM = 1557.0;
+                break;
+            case EL_ROBOT:
+                wheel0Angle = 30;
+                wheel1Angle = 150;
+                wheel2Angle = 225;
+                wheel3Angle = 315;
+                radius = 0.090;
+                wheelMotorMaxRPM = 2000.0;
+                break;
+            default:
+                break;
+            }
 
     };
 
-} // namespace Config
+}; // namespace Config
+}
 
 #endif
